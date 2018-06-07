@@ -1,0 +1,5 @@
+module.exports = [ {
+	name: 'Cartier',
+	channelName: 'cartier',
+	role: 'EX_Cartier',
+} ];

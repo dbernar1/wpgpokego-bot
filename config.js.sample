@@ -3,4 +3,7 @@
 module.exports = {
 	token: 'TOKEN',
 	raidCategoryId: 'CATEGORY_ID',
+	exPassesChannelName: 'ex_passes',
+	devUsername: 'CoollioTee',
+	exRaidCategoryId: 'CATEGORY_ID',
 };
