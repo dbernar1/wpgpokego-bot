@@ -5,7 +5,7 @@ const Discord = require( 'discord.js' );
 const download = require('image-downloader');
 const {
 	deleteDownloaded, findDevUser, findExRaidChannelFor,
-	findMatchingGymNameIn, getTextFromImage,
+	findExRaidRoleFor, findMatchingGymNameIn, getTextFromImage,
 } = require( './subs' );
 
 const { token, raidCategoryId, exPassesChannelName, } = require( './config' );
@@ -32,9 +32,12 @@ client.on( 'message', msg => {
 				if ( matchingGymName ) {
 					const exRaidChannel = findExRaidChannelFor( msg, matchingGymName );
 
-					msg.reply(
-						'looks like you are going to an EX raid at ' + matchingGymName + ', you lucky dog you! Head on over to ' + exRaidChannel.toString() + ' to co-ordinate with other trainers.'
-					);
+					return msg.member.addRole( findExRaidRoleFor( msg, matchingGymName ) )
+					.then( () => {
+						msg.reply(
+							'looks like you are going to an EX raid at ' + matchingGymName + ', you lucky dog you! Head on over to ' + exRaidChannel.toString() + ' to co-ordinate with other trainers.'
+						);
+					} );
 				} else {
 					msg.reply(
 						'sorry - is that an EX invite? ' + findDevUser( msg ).toString() + ' can you please take a look?'
