@@ -12,6 +12,7 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "discord.js": "^11.3.2",
+    "fuzzyset.js": "^0.0.5",
     "image-downloader": "^3.4.0",
     "node-tesseract": "^0.2.7",
     "underscore": "^1.9.1"

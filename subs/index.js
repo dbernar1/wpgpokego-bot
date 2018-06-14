@@ -1,17 +1,15 @@
 const deleteDownloaded = require( './deleteDownloaded' );
 const findDevUser = require( './findDevUser' );
-const findExRaidChannelFor = require( './findExRaidChannelFor' );
-const findExRaidRoleFor = require( './findExRaidRoleFor' );
-const findMatchingGymNameIn = require( './findMatchingGymNameIn' );
-const getExRaidInfo = require( './getExRaidInfo' );
+const getChannelAndRoleFor = require( './getChannelAndRoleFor' );
+const getGymNameFrom = require( './getGymNameFrom' );
 const getTextFromImage = require( './getTextFromImage' );
+const invitationIsForAnAmbiguous = require( './invitationIsForAnAmbiguous' );
 
 module.exports = {
 	deleteDownloaded,
 	findDevUser,
-	findExRaidChannelFor,
-	findExRaidRoleFor,
-	findMatchingGymNameIn,
-	getExRaidInfo,
+	getChannelAndRoleFor,
+	getGymNameFrom,
 	getTextFromImage,
+	invitationIsForAnAmbiguous,
 };

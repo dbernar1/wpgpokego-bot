@@ -4,8 +4,9 @@
 const Discord = require( 'discord.js' );
 const download = require('image-downloader');
 const {
-	deleteDownloaded, findDevUser, findExRaidChannelFor,
-	findExRaidRoleFor, findMatchingGymNameIn, getTextFromImage,
+	deleteDownloaded, findDevUser, getChannelAndRoleFor,
+	getGymNameFrom, getTextFromImage,
+	invitationIsForAnAmbiguous,
 } = require( './subs' );
 
 const { token, raidCategoryId, exPassesChannelName, } = require( './config' );
@@ -26,21 +27,28 @@ client.on( 'message', msg => {
 		} )
 		.then( ( { filename, } ) => {
 			return getTextFromImage( filename )
-			.then( uploadedImageText => {
-				const matchingGymName = findMatchingGymNameIn( uploadedImageText );
+			.then( invitationText => {
+				const gymName = getGymNameFrom( invitationText );
 
-				if ( matchingGymName ) {
-					const exRaidChannel = findExRaidChannelFor( msg, matchingGymName );
-
-					return msg.member.addRole( findExRaidRoleFor( msg, matchingGymName ) )
-					.then( () => {
+				if ( gymName ) {
+					if ( invitationIsForAnAmbiguous( gymName ) ) {
 						msg.reply(
-							'looks like you are going to an EX raid at ' + matchingGymName + ', you lucky dog you! Head on over to ' + exRaidChannel.toString() + ' to co-ordinate with other trainers.'
+							'looks like you are going to an EX raid at ' + gymName + '! Since there are a couple of gyms with that same name, let me get ' + findDevUser( msg ).toString() + ' to help get you set up.'
 						);
-					} );
+					} else {
+						return getChannelAndRoleFor( gymName, msg )
+						.then( ( { channel, role, } ) => {
+							return  msg.member.addRole( role )
+							.then( () => {
+								msg.reply(
+									'looks like you are going to an EX raid at ' + gymName + '! Head on over to ' + channel.toString() + ' to co-ordinate with other trainers.'
+								);
+							} );
+						} );
+					}
 				} else {
 					msg.reply(
-						'sorry - is that an EX invite? ' + findDevUser( msg ).toString() + ' can you please take a look?'
+						'sorry - is that a current EX invite? ' + findDevUser( msg ).toString() + ' can you please take a look?'
 					);
 				}
 			} )

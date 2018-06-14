@@ -6,4 +6,6 @@ module.exports = {
 	exPassesChannelName: 'ex_passes',
 	devUsername: 'CoollioTee',
 	exRaidCategoryId: 'CATEGORY_ID',
+	botRole: 'ROLE_ID'
+	ambiguousGymNames: [],
 };
