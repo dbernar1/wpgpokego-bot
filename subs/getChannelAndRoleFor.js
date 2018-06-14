@@ -20,6 +20,8 @@ const getChannelAndRoleFor = ( gymName, msg ) => {
 			channel => channel.parentID === exRaidCategoryId && channel.name === channelName
 		);
 
+		const exRaidCategory = msg.guild.channels.get( exRaidCategoryId );
+
 		return ( existingChannel
 			? Promise.resolve( existingChannel )
 			: msg.guild.createChannel( channelName, 'text', [
@@ -35,7 +37,7 @@ const getChannelAndRoleFor = ( gymName, msg ) => {
 					allow: Discord.Permissions.FLAGS.VIEW_CHANNEL,
 					id: botRole,
 				},
-			] )
+			].concat( exRaidCategory.permissionOverwrites.array() ) )
 		)
 		.then( channel => {
 			return channel.setParent( exRaidCategoryId );
