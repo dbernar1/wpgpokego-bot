@@ -6,7 +6,7 @@ const download = require('image-downloader');
 const {
 	deleteDownloaded, findDevUser, getChannelAndRoleFor,
 	getGymNameFrom, getTextFromImage,
-	invitationIsForAnAmbiguous,
+	invitationIsForAnAmbiguous, deleteExRaidChannelsOlderThan,
 } = require( './subs' );
 
 const { token, raidCategoryId, exPassesChannelName, } = require( './config' );
@@ -78,6 +78,15 @@ client.on( 'message', msg => {
 					msg.channel.delete();
 				} else {
 					msg.reply( 'Nuh-uh' );
+				}
+			break;
+			case 'delete-ex':
+				const date = params[ 0 ];
+
+				if ( msg.member.hasPermission( Discord.Permissions.FLAGS.MANAGE_CHANNELS ) ) {
+					deleteExRaidChannelsOlderThan( date, msg )
+					.then( channelNames => msg.reply( 'Deleted: ' + channelNames.join( ', ' ) ) )
+					.catch( console.error );
 				}
 			break;
 			default:

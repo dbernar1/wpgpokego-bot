@@ -4,3 +4,4 @@ yarn-error.log
 ex-raid-gyms.js
 downloads/*
 !downloads/.gitkeep
+textcleaner
