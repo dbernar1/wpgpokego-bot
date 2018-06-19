@@ -4,7 +4,7 @@
 const Discord = require( 'discord.js' );
 const download = require('image-downloader');
 const {
-	deleteDownloaded, findDevUser, getChannelAndRoleFor,
+	deleteDownloaded, findModeratorRole, getChannelAndRoleFor,
 	getGymNameFrom, getTextFromImage,
 	invitationIsForAnAmbiguous, deleteExRaidChannelsOlderThan,
 } = require( './subs' );
@@ -33,7 +33,7 @@ client.on( 'message', msg => {
 				if ( gymName ) {
 					if ( invitationIsForAnAmbiguous( gymName ) ) {
 						msg.reply(
-							'looks like you are going to an EX raid at ' + gymName + '! Since there are a couple of gyms with that same name, let me get ' + findDevUser( msg ).toString() + ' to help get you set up.'
+							'looks like you are going to an EX raid at ' + gymName + '! Since there are a couple of gyms with that same name, let me get ' + findModeratorRole( msg ).toString() + ' to help get you set up.'
 						);
 					} else {
 						return getChannelAndRoleFor( gymName, msg )
@@ -48,7 +48,7 @@ client.on( 'message', msg => {
 					}
 				} else {
 					msg.reply(
-						'sorry - is that a current EX invite? ' + findDevUser( msg ).toString() + ' can you please take a look?'
+						'sorry - is that a current EX invite? ' + findModeratorRole( msg ).toString() + ' can you please take a look?'
 					);
 				}
 			} )
@@ -66,19 +66,6 @@ client.on( 'message', msg => {
 		switch( commandName ) {
 			case 'hello':
 				msg.reply('Hello World!');
-			break;
-			case 'raid':
-				const channelName = params.join( '-' ).toLowerCase();
-				msg.guild.createChannel( channelName, 'text' )
-				.then( channel => channel.setParent( raidCategoryId ) )
-				.then( channel => msg.channel.send( msg.member.toString() + ' created raid channel ' + channel.toString() ) );
-			break;
-			case 'endraid':
-				if ( msg.channel.parentID === raidCategoryId ) {
-					msg.channel.delete();
-				} else {
-					msg.reply( 'Nuh-uh' );
-				}
 			break;
 			case 'delete-ex':
 				const date = params[ 0 ];
