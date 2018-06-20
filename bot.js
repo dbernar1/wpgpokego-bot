@@ -3,25 +3,22 @@
 
 const Discord = require( 'discord.js' );
 const download = require('image-downloader');
+const Promise = require( 'bluebird' );
 const {
 	deleteDownloaded, findModeratorRole, getChannelAndRoleFor,
 	getGymNameFrom, getTextFromImage,
 	invitationIsForAnAmbiguous, deleteExRaidChannelsOlderThan,
 } = require( './subs' );
 
-const { token, raidCategoryId, exPassesChannelName, } = require( './config' );
+const { token, raidCategoryId, exPassesChannelName, developerRole, } = require( './config' );
 
 const client = new Discord.Client();
 
-client.on( 'message', msg => {
-	const messageWasSentToExPassesChannel = exPassesChannelName === msg.channel.name;
+const processExPassesChannelMessage = ( msg, replyToReUpload=true ) => {
 	const anImageWasUploaded = msg.attachments.size > 0 && !! msg.attachments.first().height;
 
-	if (
-		messageWasSentToExPassesChannel
-		&& anImageWasUploaded
-	) {
-		download.image( {
+	if ( anImageWasUploaded ) {
+		return download.image( {
 			url: msg.attachments.first().url,
 			dest: './downloads',
 		} )
@@ -38,12 +35,21 @@ client.on( 'message', msg => {
 					} else {
 						return getChannelAndRoleFor( gymName, msg, client )
 						.then( ( { channel, role, } ) => {
-							return  msg.member.addRole( role )
-							.then( () => {
-								msg.reply(
-									'looks like you are going to an EX raid at ' + gymName + '! Head on over to ' + channel.toString() + ' to co-ordinate with other trainers.'
-								);
-							} );
+							const userAlreadyHasRole = !! msg.member.roles.get( role.id );
+							if ( userAlreadyHasRole ) {
+								if ( replyToReUpload ) {
+									msg.reply(
+										'looks like you already uploaded that earlier. No worries - just head over to ' + channel.toString() + ' to co-ordinate with other trainers.'
+									);
+								}
+							} else {
+								return msg.member.addRole( role )
+								.then( () => {
+									msg.reply(
+										'looks like you are going to an EX raid at ' + gymName + '! Head on over to ' + channel.toString() + ' to co-ordinate with other trainers.'
+									);
+								} );
+							}
 						} );
 					}
 				} else {
@@ -56,6 +62,14 @@ client.on( 'message', msg => {
 		} )
 		.then( filename => deleteDownloaded( filename ) )
 		.catch( console.log );
+	}
+};
+
+client.on( 'message', msg => {
+	const messageWasSentToExPassesChannel = exPassesChannelName === msg.channel.name;
+
+	if ( messageWasSentToExPassesChannel ) {
+		processExPassesChannelMessage( msg );
 	}
 
 	const messageIsABotCommand = msg.content.startsWith( '!' );
@@ -74,6 +88,24 @@ client.on( 'message', msg => {
 					deleteExRaidChannelsOlderThan( date, msg )
 					.then( channelNames => msg.reply( 'Deleted: ' + channelNames.join( ', ' ) ) )
 					.catch( console.error );
+				}
+			break;
+			case 're-check-ex':
+				const messageId = params[ 0 ];
+
+				if ( msg.member.roles.find( 'name', developerRole ) ) {
+					const exChannel = msg.guild.channels.find( 'name', exPassesChannelName );
+
+					exChannel.fetchMessages( { after: messageId, } )
+					.then( messages => {
+						return Promise.mapSeries(
+							messages.array(),
+							message => processExPassesChannelMessage( message, false )
+						)
+						.then( () => {
+							msg.reply( 'all done' );
+						} );
+					} );
 				}
 			break;
 			default:
