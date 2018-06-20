@@ -1,22 +1,24 @@
 const exRaidGyms = require( '../ex-raid-gyms' );
-const { find, } = require( 'underscore' );
+const { filter, max, } = require( 'underscore' );
 const FuzzySet = require( 'fuzzyset.js' );
 
 const exGymFuzzySet = FuzzySet( exRaidGyms );
 
 const getGymNameFrom = invitationText => {
-	const matchByFullName = find(
+	const matchByFullName = filter(
 		exRaidGyms,
 		exGymName => invitationText.includes( exGymName )
 	);
 
-	if ( matchByFullName ) {
-		return matchByFullName;
+	if ( matchByFullName.length ) {
+		return max( matchByFullName, match => match.length );
 	} else {
 		const lineWithMatch = find( invitationText.split( '\n' ), invitationLine => !! exGymFuzzySet.get( invitationLine ) );
 
 		if ( !! lineWithMatch ) {
-			return exGymFuzzySet.get( lineWithMatch )[ 0 ][ 1 ];
+			const matches = exGymFuzzySet.get( lineWithMatch );
+
+			return matches[ 0 ][ 1 ];
 		}
 	}
 };
