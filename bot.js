@@ -36,7 +36,7 @@ client.on( 'message', msg => {
 							'looks like you are going to an EX raid at ' + gymName + '! Since there are a couple of gyms with that same name, let me get ' + findModeratorRole( msg ).toString() + ' to help get you set up.'
 						);
 					} else {
-						return getChannelAndRoleFor( gymName, msg )
+						return getChannelAndRoleFor( gymName, msg, client )
 						.then( ( { channel, role, } ) => {
 							return  msg.member.addRole( role )
 							.then( () => {

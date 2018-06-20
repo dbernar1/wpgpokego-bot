@@ -2,7 +2,9 @@ const Promise = require( 'bluebird' );
 const { exRaidCategoryId, botRole, } = require( '../config' );
 const Discord = require( 'discord.js' );
 
-const getChannelAndRoleFor = ( gymName, msg ) => {
+const recentlyCreatedChannels = {};
+
+const getChannelAndRoleFor = ( gymName, msg, client ) => {
 	const channelName = gymName.toLowerCase().replace( / /g, '-' ).replace( /[^a-z0-9\-]+/g, '' );
 
 	const roleName = gymName;
@@ -16,9 +18,18 @@ const getChannelAndRoleFor = ( gymName, msg ) => {
 		: msg.guild.createRole( { name: roleName, } )
 	)
 	.then( role => {
-		const existingChannel = msg.guild.channels.find(
-			channel => channel.parentID === exRaidCategoryId && channel.name === channelName
-		);
+		const existingChannel = channelName in recentlyCreatedChannels
+			? msg.guild.channels.get( recentlyCreatedChannels[ channelName ] )
+			: msg.guild.channels.find( channel => {
+				const isAnExChannel = channel.parentID === exRaidCategoryId;
+				const nameMatches = channel.name === channelName;
+
+				if ( nameMatches ) {
+					console.log( channel.parentID );
+				}
+
+				return isAnExChannel && nameMatches;
+			} );
 
 		const exRaidCategory = msg.guild.channels.get( exRaidCategoryId );
 
@@ -39,10 +50,9 @@ const getChannelAndRoleFor = ( gymName, msg ) => {
 				},
 			].concat( exRaidCategory.permissionOverwrites.array() ) )
 		)
+		.then( channel => channel.setParent( exRaidCategoryId ) )
 		.then( channel => {
-			return channel.setParent( exRaidCategoryId );
-		} )
-		.then( channel => {
+			recentlyCreatedChannels[ channelName ] = channel.id;
 			return { role, channel, };
 		} );
 	} );
