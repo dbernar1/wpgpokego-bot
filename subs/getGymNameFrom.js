@@ -1,5 +1,5 @@
 const exRaidGyms = require( '../ex-raid-gyms' );
-const { filter, max, } = require( 'underscore' );
+const { find, filter, max, } = require( 'underscore' );
 const FuzzySet = require( 'fuzzyset.js' );
 
 const exGymFuzzySet = FuzzySet( exRaidGyms );
