@@ -45,6 +45,10 @@ const getChannelAndRoleFor = ( gymName, msg, client ) => {
 					id: role,
 				},
 				{
+					allow: Discord.Permissions.FLAGS.SEND_MESSAGES,
+					id: role,
+				},
+				{
 					allow: Discord.Permissions.FLAGS.VIEW_CHANNEL,
 					id: botRole,
 				},
