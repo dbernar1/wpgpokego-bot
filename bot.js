@@ -96,7 +96,7 @@ client.on( 'message', msg => {
 				if ( msg.member.roles.find( 'name', developerRole ) ) {
 					const exChannel = msg.guild.channels.find( 'name', exPassesChannelName );
 
-					exChannel.fetchMessages( { after: messageId, } )
+					exChannel.fetchMessages( { after: messageId, limit: 100, } )
 					.then( messages => {
 						return Promise.mapSeries(
 							messages.array(),

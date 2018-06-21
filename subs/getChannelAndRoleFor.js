@@ -15,7 +15,7 @@ const getChannelAndRoleFor = ( gymName, msg, client ) => {
 
 	return ( existingRole
 		? Promise.resolve( existingRole )
-		: msg.guild.createRole( { name: roleName, } )
+		: msg.guild.createRole( { name: roleName, mentionable: true, } )
 	)
 	.then( role => {
 		const existingChannel = channelName in recentlyCreatedChannels
@@ -23,10 +23,6 @@ const getChannelAndRoleFor = ( gymName, msg, client ) => {
 			: msg.guild.channels.find( channel => {
 				const isAnExChannel = channel.parentID === exRaidCategoryId;
 				const nameMatches = channel.name === channelName;
-
-				if ( nameMatches ) {
-					console.log( channel.parentID );
-				}
 
 				return isAnExChannel && nameMatches;
 			} );
@@ -41,11 +37,15 @@ const getChannelAndRoleFor = ( gymName, msg, client ) => {
 					id: theEveryoneRole,
 				},
 				{
-					allow: Discord.Permissions.FLAGS.VIEW_CHANNEL,
+					allow: Discord.Permissions.FLAGS.SEND_MESSAGES,
 					id: role,
 				},
 				{
-					allow: Discord.Permissions.FLAGS.SEND_MESSAGES,
+					allow: Discord.Permissions.FLAGS.READ_MESSAGES,
+					id: role,
+				},
+				{
+					allow: Discord.Permissions.FLAGS.VIEW_CHANNEL,
 					id: role,
 				},
 				{
