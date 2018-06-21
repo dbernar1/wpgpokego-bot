@@ -1,6 +1,7 @@
 const exRaidGyms = require( '../ex-raid-gyms' );
 const { find, filter, max, } = require( 'underscore' );
 const FuzzySet = require( 'fuzzyset.js' );
+const { trickyGymNames } = require( '../config' );
 
 const exGymFuzzySet = FuzzySet( exRaidGyms );
 
@@ -10,8 +11,10 @@ const getGymNameFrom = invitationText => {
 		exGymName => invitationText.includes( exGymName )
 	);
 
-	if ( matchByFullName.length ) {
-		return max( matchByFullName, match => match.length );
+	const longestFullGymNameMatch = max( matchByFullName, match => match.length );
+
+	if ( longestFullGymNameMatch && ! trickyGymNames.includes( longestFullGymNameMatch ) ) {
+		return longestFullGymNameMatch;
 	} else {
 		const lineWithMatch = find( invitationText.split( '\n' ), invitationLine => !! exGymFuzzySet.get( invitationLine ) );
 
