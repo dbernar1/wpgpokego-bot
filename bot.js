@@ -103,7 +103,10 @@ client.on( 'message', msg => {
 							message => processExPassesChannelMessage( message, false )
 						)
 						.then( () => {
-							msg.reply( 'all done - next msg ID: ' + messages.first().id );
+							msg.reply( messages.size > 0
+								? 'batch done - next msg ID: ' + messages.first().id
+								: 'all done!'
+							);
 						} );
 					} );
 				}
