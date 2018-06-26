@@ -11,9 +11,15 @@ const getGymNameFrom = invitationText => {
 		exGymName => invitationText.includes( exGymName )
 	);
 
-	const longestFullGymNameMatch = max( matchByFullName, match => match.length );
+	const longestFullGymNameMatch = !! matchByFullName.length && max(
+		matchByFullName,
+		match => match.length
+	);
 
-	if ( longestFullGymNameMatch && ! trickyGymNames.includes( longestFullGymNameMatch ) ) {
+	if (
+		longestFullGymNameMatch
+		&& ! trickyGymNames.includes( longestFullGymNameMatch )
+	) {
 		return longestFullGymNameMatch;
 	} else {
 		const lineWithMatch = find( invitationText.split( '\n' ), invitationLine => !! exGymFuzzySet.get( invitationLine ) );
