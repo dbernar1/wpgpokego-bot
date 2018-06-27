@@ -1,13 +1,15 @@
 const Promise = require( 'bluebird' );
 const { exRaidCategoryId, botRole, } = require( '../config' );
+const getRoleNameFor = require( './getRoleNameFor' );
+const getChannelNameFor = require( './getChannelNameFor' );
 const Discord = require( 'discord.js' );
 
 const recentlyCreatedChannels = {};
 
 const getChannelAndRoleFor = ( gymName, msg, client ) => {
-	const channelName = gymName.toLowerCase().replace( / /g, '-' ).replace( /[^a-z0-9\-]+/g, '' );
+	const channelName = getChannelNameFor( gymName );
 
-	const roleName = gymName;
+	const roleName = getRoleNameFor( gymName );
 
 	const existingRole = msg.guild.roles.find( 'name', roleName );
 
