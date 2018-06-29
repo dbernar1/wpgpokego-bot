@@ -8,6 +8,20 @@ module.exports = {
 	exRaidCategoryId: 'CATEGORY_ID',
 	botRole: 'ROLE_ID'
 	developerRole: 'Developer',
-	ambiguousGymNames: [],
-	trickyGymNames: [],
+	ambiguousGymNames: [
+		'Sturgeon Creek Greenway Trail',
+	],
+	trickyGymNames: [
+		'Memorial Bench',
+	],
+	newRoleOptions: {
+		mentionable: true,
+	},
+	exChannelPermissions: [
+		'SEND_MESSAGES',
+		'READ_MESSAGES',
+		'VIEW_CHANNEL',
+		'ADD_REACTIONS',
+		'ATTACH_FILES',
+	],
 };
