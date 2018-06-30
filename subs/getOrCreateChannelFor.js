@@ -17,7 +17,6 @@ const getOrCreateChannelFor = ( gymName, msg, role ) => {
 			return isAnExChannel && nameMatches;
 		} );
 
-
 	if ( existingChannel ) {
 		return Promise.resolve( existingChannel );
 	} else {
