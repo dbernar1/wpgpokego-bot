@@ -5,8 +5,8 @@ module.exports = {
 	raidCategoryId: 'CATEGORY_ID',
 	exPassesChannelName: 'ex_passes',
 	devUsername: 'CoollioTee',
-	exRaidCategoryId: 'CATEGORY_ID',
-	botRole: 'ROLE_ID'
+	exRaidCategoryIds: [ 'WAVE_1_CATEGORY_ID', 'WAVE_2_CATEGORY_ID' ],
+	botRole: 'ROLE_ID',
 	developerRole: 'Developer',
 	ambiguousGymNames: [
 		'Sturgeon Creek Greenway Trail',
