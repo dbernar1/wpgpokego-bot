@@ -4,10 +4,9 @@ const getExRaidRoleFor = require( './getExRaidRoleFor' );
 
 const deleteExRaidChannelsOlderThan = ( date, msg ) => {
 	const expiredExRaidChannels = getExpiredExRaidChannels( msg, date );
-
 	const channelNames = expiredExRaidChannels.map( channel => channel.name );
 
-	return Promise.map( expiredExRaidChannels, channel => {
+	return Promise.map( expiredExRaidChannels.array(), channel => {
 		const channelRole = getExRaidRoleFor( channel, msg );
 
 		return Promise.all( [
