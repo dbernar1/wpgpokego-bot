@@ -6,13 +6,14 @@ const possibleExRaidChannelNames = (
 ).map( gymName => getChannelNameFor( gymName ) );
 
 const getExpiredExRaidChannels = ( msg, date ) => {
-	return msg.guild.channels.findAll( channel => exRaidCategoryIds.includes( channel.parentID ) )
+	return msg.guild.channels
 	.filter( channel => {
+		const channelIsUnderExRaidCategory = exRaidCategoryIds.includes( channel.parentID );
 		const wasCreatedBeforeProvidedDate = moment( channel.createdTimestamp ).isBefore( date );
 
 		const isAnExRaidChannel = possibleExRaidChannelNames.includes( channel.name );
 
-		return wasCreatedBeforeProvidedDate && isAnExRaidChannel;
+		return channelIsUnderExRaidCategory && wasCreatedBeforeProvidedDate && isAnExRaidChannel;
 	} );
 };
 

@@ -8,7 +8,7 @@ const deleteExRaidChannelsOlderThan = ( date, msg ) => {
 	const channelNames = expiredExRaidChannels.map( channel => channel.name );
 
 	return Promise.map( expiredExRaidChannels, channel => {
-		const channelRole = getExRaidRoleFor( channel );
+		const channelRole = getExRaidRoleFor( channel, msg );
 
 		return Promise.all( [
 			channel.delete(),
