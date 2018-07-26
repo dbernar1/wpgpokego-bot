@@ -1,7 +1,7 @@
 const Discord = require( 'discord.js' );
 const getChannelNameFor = require( './getChannelNameFor' );
 const Promise = require( 'bluebird' );
-const { exRaidCategoryIds, botRole, exAttendeePermissions, } = require( '../config' );
+const { newChannelMessage, exRaidCategoryIds, botRole, exAttendeePermissions, } = require( '../config' );
 const { find, max, } = require( 'underscore' );
 
 const figureOutWhichWaveToAddThisNewChannelTo = msg => {
@@ -85,6 +85,8 @@ const getOrCreateChannelFor = ( gymName, msg, role ) => {
 			)
 		)
 		.then( channel => {
+			channel.send( newChannelMessage );
+
 			recentlyCreatedChannels[ channelName ] = channel.id;
 			return channel.setParent( exRaidCategoryId );
 		} );
