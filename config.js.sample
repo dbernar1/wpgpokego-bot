@@ -17,6 +17,7 @@ module.exports = {
 	newRoleOptions: {
 		mentionable: true,
 	},
+	newChannelMessage: 'Welcome Here!',
 	exChannelPermissions: [
 		'SEND_MESSAGES',
 		'READ_MESSAGES',
