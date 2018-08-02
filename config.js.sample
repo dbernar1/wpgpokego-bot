@@ -4,6 +4,7 @@ module.exports = {
 	token: 'TOKEN',
 	raidCategoryId: 'CATEGORY_ID',
 	exPassesChannelName: 'ex_passes',
+	exStaffChannelId: 'CHANNEL_ID',
 	devUsername: 'CoollioTee',
 	exRaidCategoryIds: [ 'WAVE_1_CATEGORY_ID', 'WAVE_2_CATEGORY_ID' ],
 	botRole: 'ROLE_ID',
