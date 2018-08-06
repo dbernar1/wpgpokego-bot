@@ -10,6 +10,7 @@ const getGymNameFrom = require( './getGymNameFrom' );
 const getRoleNameFor = require( './getRoleNameFor' );
 const getTextFromImage = require( './getTextFromImage' );
 const invitationIsForAnAmbiguous = require( './invitationIsForAnAmbiguous' );
+const processExPassesChannelMessage = require( './processExPassesChannelMessage' );
 
 module.exports = {
 	deleteDownloaded,
@@ -24,4 +25,5 @@ module.exports = {
 	getRoleNameFor,
 	getTextFromImage,
 	invitationIsForAnAmbiguous,
+	processExPassesChannelMessage,
 };
