@@ -2,7 +2,7 @@ const Discord = require( 'discord.js' );
 const getChannelNameFor = require( './getChannelNameFor' );
 const Promise = require( 'bluebird' );
 const { newChannelEmbed, exRaidCategoryIds, exStaffChannelId, botRole, exAttendeePermissions, } = require( '../config' );
-const { find, max, } = require( 'underscore' );
+const { find, max, extend, } = require( 'underscore' );
 
 const figureOutWhichWaveToAddThisNewChannelTo = msg => {
 	const channelsByWave = exRaidCategoryIds.map(
