@@ -85,8 +85,11 @@ const getOrCreateChannelFor = ( gymName, msg, role ) => {
 			)
 		)
 		.then( channel => {
-			newChannelEmbed.description = newChannelEmbed.description.replace( '%gymName%', gymName );
-			channel.sendEmbed( newChannelEmbed );
+			channel.sendEmbed( extend(
+				{},
+				newChannelEmbed,
+				{ description: newChannelEmbed.description.replace( '%gymName%', gymName ), }
+			) );
 			msg.guild.channels.get( exStaffChannelId ).send( 'Created new channel for ' + gymName );
 
 			recentlyCreatedChannels[ channelName ] = channel.id;
