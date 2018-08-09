@@ -18,7 +18,10 @@ module.exports = {
 	newRoleOptions: {
 		mentionable: true,
 	},
-	newChannelMessage: 'Welcome Here!',
+	newChannelEmbed: {
+		description: 'Hello',
+		color: 10027247,
+	}
 	exChannelPermissions: [
 		'SEND_MESSAGES',
 		'READ_MESSAGES',
