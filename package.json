@@ -4,10 +4,11 @@
   "description": "",
   "main": "bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "forever start bot.js",
+    "dev": "nodemon bot",
     "restart": "forever restart bot.js",
-    "dev": "nodemon bot"
+    "start": "forever start bot.js",
+    "stop": "forever stop bot.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
