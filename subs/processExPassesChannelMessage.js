@@ -5,6 +5,7 @@ const getChannelAndRoleFor = require( './getChannelAndRoleFor' );
 const getGymNameFrom = require( './getGymNameFrom' );
 const getTextFromImage = require( './getTextFromImage' );
 const invitationIsForAnAmbiguous = require( './invitationIsForAnAmbiguous' );
+const imageHasAcceptableDimensions = require( './imageHasAcceptableDimensions' );
 const { raidCategoryId, } = require( '../config' );
 
 const processExPassesChannelMessage = ( msg, replyToReUpload=true ) => {
@@ -16,42 +17,52 @@ const processExPassesChannelMessage = ( msg, replyToReUpload=true ) => {
 			dest: './downloads',
 		} )
 		.then( ( { filename, } ) => {
-			return getTextFromImage( filename )
-			.then( invitationText => {
-				const gymName = getGymNameFrom( invitationText );
+			if ( imageHasAcceptableDimensions( filename ) ) {
+				return getTextFromImage( filename )
+				.then( invitationText => {
+					const gymName = getGymNameFrom( invitationText );
 
-				if ( gymName ) {
-					if ( invitationIsForAnAmbiguous( gymName ) ) {
-						msg.reply(
-							'looks like you are going to an EX raid at ' + gymName + '! Since there are a couple of gyms with that same name, let me get ' + findModeratorRole( msg ).toString() + ' to help get you set up.'
-						);
-					} else {
-						return getChannelAndRoleFor( gymName, msg )
-						.then( ( { channel, role, } ) => {
-							const userAlreadyHasRole = !! msg.member.roles.get( role.id );
-							if ( userAlreadyHasRole ) {
-								if ( replyToReUpload ) {
-									msg.reply(
-										'looks like you already uploaded that earlier. No worries - just head over to ' + channel.toString() + ' to co-ordinate with other trainers.'
-									);
+					if ( gymName ) {
+						if ( invitationIsForAnAmbiguous( gymName ) ) {
+							msg.reply(
+								'looks like you are going to an EX raid at ' + gymName + '! Since there are a couple of gyms with that same name, let me get ' + findModeratorRole( msg ).toString() + ' to help get you set up.'
+							);
+						} else {
+							return getChannelAndRoleFor( gymName, msg )
+							.then( ( { channel, role, } ) => {
+								const userAlreadyHasRole = !! msg.member.roles.get( role.id );
+								if ( userAlreadyHasRole ) {
+									if ( replyToReUpload ) {
+										msg.reply(
+											'looks like you already uploaded that earlier. No worries - just head over to ' + channel.toString() + ' to co-ordinate with other trainers.'
+										);
+									}
+								} else {
+									return msg.member.addRole( role )
+									.then( () => {
+										msg.reply(
+											'looks like you are going to an EX raid at ' + gymName + '! Head on over to ' + channel.toString() + ' to co-ordinate with other trainers.'
+										);
+									} );
 								}
-							} else {
-								return msg.member.addRole( role )
-								.then( () => {
-									msg.reply(
-										'looks like you are going to an EX raid at ' + gymName + '! Head on over to ' + channel.toString() + ' to co-ordinate with other trainers.'
-									);
-								} );
-							}
-						} );
+							} );
+						}
+					} else {
+						msg.reply(
+							'sorry - is that a current EX invite? ' + findModeratorRole( msg ).toString() + ' can you please take a look?'
+						);
 					}
-				} else {
-					msg.reply(
-						'sorry - is that a current EX invite? ' + findModeratorRole( msg ).toString() + ' can you please take a look?'
-					);
-				}
-			} )
-			.thenReturn( filename );
+				} )
+				.thenReturn( filename );
+			} else {
+				msg.reply(
+					`Sorry,
+I'm having trouble reading your pass!
+This often happens with __cropped__ or __blurry__ screenshots.
+Please check you pass and try again.
+If I'm still not working right, tag a Moderator for assistance :)`
+				);
+			}
 		} )
 		.then( filename => deleteDownloaded( filename ) )
 		.catch( console.log );

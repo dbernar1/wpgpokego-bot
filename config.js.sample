@@ -29,4 +29,16 @@ module.exports = {
 		'ADD_REACTIONS',
 		'ATTACH_FILES',
 	],
+	acceptableImageDimensions: [
+		'640x960',
+		'640x1136',
+		'1136x640',
+		'1536x2048',
+		'2048x1536',
+		'1066x640',
+		'820x1280',
+		'1280x820',
+		'1440x2560',
+		'2560x1440',
+	],
 };
