@@ -6,8 +6,10 @@ const getGymNameFrom = require( './getGymNameFrom' );
 const getTextFromImage = require( './getTextFromImage' );
 const invitationIsForAnAmbiguous = require( './invitationIsForAnAmbiguous' );
 const { raidCategoryId, } = require( '../config' );
+const sizeOf = require( 'image-size' );
+const Promise = require( 'bluebird' );
 
-const processExPassesChannelMessage = ( msg, replyToReUpload=true ) => {
+const processExPassesChannelMessage = ( msg, replyToReUpload=true,onlyCheckDimensions=false ) => {
 	const anImageWasUploaded = msg.attachments.size > 0 && !! msg.attachments.first().height;
 
 	if ( anImageWasUploaded ) {
@@ -16,6 +18,15 @@ const processExPassesChannelMessage = ( msg, replyToReUpload=true ) => {
 			dest: './downloads',
 		} )
 		.then( ( { filename, } ) => {
+			if ( onlyCheckDimensions ) {
+				const dimensions = sizeOf( filename );
+
+				return Promise.resolve( {
+					filename,
+					dimensions: `${ dimensions.width }x${ dimensions.height }`,
+				} );
+			}
+
 			return getTextFromImage( filename )
 			.then( invitationText => {
 				const gymName = getGymNameFrom( invitationText );
@@ -53,7 +64,11 @@ const processExPassesChannelMessage = ( msg, replyToReUpload=true ) => {
 			} )
 			.thenReturn( filename );
 		} )
-		.then( filename => deleteDownloaded( filename ) )
+		.then( ( fileInfo ) => {
+			deleteDownloaded( fileInfo.filename );
+
+			return fileInfo;
+		} )
 		.catch( console.log );
 	}
 };

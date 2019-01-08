@@ -45,6 +45,24 @@ client.on( 'message', msg => {
 				}
 			break;
 			case 're-check-ex':
+				const getAllMessagesSentSinceMessageWithId = ( exChannel, messageId, previouslyFetchedMessages=[] ) => {
+					return exChannel.fetchMessages( {
+						after: messageId,
+						limit: 100,
+					} )
+					.then( messages => {
+						if ( messages.size > 0 ) {
+							return getAllMessagesSentSinceMessageWithId(
+								exChannel,
+								messages.first().id,
+								previouslyFetchedMessages.concat( messages.array() )
+							);
+						} else {
+							return previouslyFetchedMessages;
+						}
+					} );
+				};
+
 				const messageId = params[ 0 ];
 
 				if ( msg.member.roles.find(
@@ -52,21 +70,28 @@ client.on( 'message', msg => {
 				) ) {
 					const exChannel = msg.guild.channels.find( 'name', exPassesChannelName );
 
-					exChannel.fetchMessages( {
-						after: messageId,
-						limit: 100,
-					} )
-					.then( messages => {
-						return Promise.mapSeries(
-							messages.array(),
-							message => processExPassesChannelMessage( message, false )
-						)
-						.then( () => {
-							msg.reply( messages.size > 0
-								? 'batch done - next msg ID: ' + messages.first().id
-								: 'all done!'
-							);
-						} );
+					getAllMessagesSentSinceMessageWithId( exChannel, messageId )
+					.then( messages => Promise.mapSeries(
+						messages,
+						message => processExPassesChannelMessage( message, false, false )
+					) )
+					.then( dimensions => {
+						console.log(
+							dimensions
+							.filter( d => !!d )
+							.reduce( ( screenSizes, imageInfo ) => {
+								if ( imageInfo.dimensions in screenSizes ) {
+									screenSizes[ imageInfo.dimensions ]++;
+								} else {
+									screenSizes[ imageInfo.dimensions ] = 1;
+								}
+
+								return screenSizes;
+								
+							}, {} )
+						);
+
+						msg.reply( 'all done!' );
 					} );
 				}
 			break;
