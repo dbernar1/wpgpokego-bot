@@ -29,4 +29,18 @@ module.exports = {
 		'ADD_REACTIONS',
 		'ATTACH_FILES',
 	],
+	scheduledDeletionConfigs: [ {
+		cycle: '02:00:00',
+		guildId: 'GUILD_ID',
+		startsWith: 'quests-',
+		categoryId: 'CATEGORY_ID',
+	}, {
+		cycle: '05:55:00',
+		guildId: 'GUILD_ID',
+		channelNames: [
+			'channel-1',
+			'channel-2',
+		],
+		categoryId: 'CATEGORY_ID',
+	} ],
 };

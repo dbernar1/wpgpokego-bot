@@ -9,7 +9,13 @@ const {
 	getExRaidRoleFor,
 } = require( './subs' );
 
-const { exRaidCategoryIds, token, exPassesChannelName, developerRole, } = require( './config' );
+const {
+	exRaidCategoryIds,
+	token,
+	exPassesChannelName,
+	developerRole,
+	scheduledDeletionConfigs,
+} = require( './config' );
 
 const client = new Discord.Client();
 
@@ -135,3 +141,47 @@ client.on( 'ready', () => {
 } );
 
 client.login( token );
+
+
+const ontime = require( 'ontime' );
+
+scheduledDeletionConfigs.forEach( scheduledDeletionConfig => {
+	ontime(
+		{ cycle: scheduledDeletionConfig.cycle, },
+		ot => {
+			return Promise.mapSeries(
+				client.guilds.get( scheduledDeletionConfig.guildId ).channels
+				.filter( channel => {
+					const channelIsInQuestsCategory = channel.parentID === scheduledDeletionConfig.categoryId;
+
+					return channelIsInQuestsCategory
+					&& (
+						scheduledDeletionConfig.startsWith
+							? channel.name.startsWith( scheduledDeletionConfig.startsWith )
+							: scheduledDeletionConfig.channelNames.includes( channel.name )
+					)
+				} ).array(),
+				channel => {
+					const botHasPermissionToDeleteMessagesFromChannel = channel.permissionsFor( client.user ).has( Discord.Permissions.FLAGS.MANAGE_MESSAGES );
+					if ( botHasPermissionToDeleteMessagesFromChannel ) {
+						return deleteMessagesFrom( channel );
+					}
+				}
+			)
+			.then( () => {
+				ot.done();
+			} );
+		}
+	);
+} );
+
+const deleteMessagesFrom = channel => {
+	return channel.bulkDelete( 99, true )
+	.then( deletedMessages => {
+		if ( deletedMessages.size > 0 ) {
+			return deleteMessagesFrom( channel );
+		} else {
+			return;
+		}
+	} );
+};
