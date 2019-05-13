@@ -170,7 +170,8 @@ scheduledDeletionConfigs.forEach( scheduledDeletionConfig => {
 			)
 			.then( () => {
 				ot.done();
-			} );
+			} )
+			.catch( console.error );
 		}
 	);
 } );
