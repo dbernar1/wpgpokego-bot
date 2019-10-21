@@ -9,6 +9,7 @@ module.exports = {
 	exRaidCategoryIds: [ 'WAVE_1_CATEGORY_ID', 'WAVE_2_CATEGORY_ID' ],
 	botRole: 'ROLE_ID',
 	developerRole: 'Developer',
+	discordAdminRole: 'Discord Admin',
 	ambiguousGymNames: [
 		'Sturgeon Creek Greenway Trail',
 	],

@@ -14,6 +14,7 @@ const {
 	token,
 	exPassesChannelName,
 	developerRole,
+	discordAdminRole,
 	scheduledDeletionConfigs,
 } = require( './config' );
 
@@ -72,7 +73,7 @@ client.on( 'message', msg => {
 				const messageId = params[ 0 ];
 
 				if ( msg.member.roles.find(
-					'name', developerRole
+					'name', discordAdminRole
 				) ) {
 					const exChannel = msg.guild.channels.find( 'name', exPassesChannelName );
 
