@@ -6,7 +6,6 @@ const Promise = require( 'bluebird' );
 const {
 	deleteExRaidChannelsOlderThan,
 	processExPassesChannelMessage,
-	getExRaidRoleFor,
 } = require( './subs' );
 
 const {
@@ -100,34 +99,6 @@ client.on( 'message', msg => {
 
 						msg.reply( 'all done!' );
 					} );
-				}
-			break;
-			case 'check-roles':
-				if ( msg.member.roles.find(
-					'name', developerRole
-				) ) {
-					console.log(
-						msg.guild.channels
-						.filter(
-							channel => exRaidCategoryIds.includes( channel.parentID )
-						)
-						.map(
-							channel => {
-								const role = getExRaidRoleFor( channel, msg );
-
-								if ( ! role ) { console.log( '---------', channel.name, '----------' ); }
-								return role;
-							}
-						)
-						.map(
-							role => {
-								return role
-								? role.name + ' - ' + role.members.array().length + ' - ' + role.createdAt
-								: 'UNKNOWN';
-							}
-						),
-						msg.guild.roles.get( '471739826387943444' ).members.map( member => member.nickname )
-					);
 				}
 			break;
 			default:

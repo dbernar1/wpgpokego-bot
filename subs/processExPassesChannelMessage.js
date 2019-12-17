@@ -1,7 +1,7 @@
 const download = require( 'image-downloader' );
 const deleteDownloaded = require( './deleteDownloaded' );
 const findModeratorRole = require( './findModeratorRole' );
-const getChannelAndRoleFor = require( './getChannelAndRoleFor' );
+const getOrCreateChannelFor = require( './getOrCreateChannelFor' );
 const getGymNameFrom = require( './getGymNameFrom' );
 const getTextFromImage = require( './getTextFromImage' );
 const invitationIsForAnAmbiguous = require( './invitationIsForAnAmbiguous' );
@@ -37,24 +37,12 @@ const processExPassesChannelMessage = ( msg, replyToReUpload=true,onlyCheckDimen
 							'looks like you are going to an EX raid at ' + gymName + '! Since there are a couple of gyms with that same name, let me get ' + findModeratorRole( msg ).toString() + ' to help get you set up.'
 						);
 					} else {
-						return getChannelAndRoleFor( gymName, msg )
-						.then( ( { channel, role, } ) => {
-							const userAlreadyHasRole = !! msg.member.roles.get( role.id );
-							if ( userAlreadyHasRole ) {
-								if ( replyToReUpload ) {
-									msg.reply(
-										'looks like you already uploaded that earlier. No worries - just head over to ' + channel.toString() + ' to co-ordinate with other trainers.'
-									);
-								}
-							} else {
-								return msg.member.addRole( role )
-								.then( () => {
-									msg.reply(
-										'looks like you are going to an EX raid at ' + gymName + '! Head on over to ' + channel.toString() + ' to co-ordinate with other trainers.'
-									);
-									channel.send( msg.member.toString() + ' this is the EX raid channel' );
-								} );
-							}
+						return getOrCreateChannelFor( gymName, msg )
+						.then( channel => {
+							msg.reply(
+								'looks like you are going to an EX raid at ' + gymName + '! Head on over to ' + channel.toString() + ' to co-ordinate with other trainers.'
+							);
+							channel.send( msg.member.toString() + ' this is the EX raid channel' );
 						} );
 					}
 				} else {

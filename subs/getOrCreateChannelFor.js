@@ -1,7 +1,7 @@
 const Discord = require( 'discord.js' );
 const getChannelNameFor = require( './getChannelNameFor' );
 const Promise = require( 'bluebird' );
-const { newChannelEmbed, exRaidCategoryIds, exStaffChannelId, botRole, exAttendeePermissions, } = require( '../config' );
+const { newChannelEmbed, exRaidCategoryIds, exStaffChannelId, botRole, } = require( '../config' );
 const { find, max, extend, } = require( 'underscore' );
 
 const figureOutWhichWaveToAddThisNewChannelTo = msg => {
@@ -40,7 +40,7 @@ const figureOutWhichWaveToAddThisNewChannelTo = msg => {
 
 const recentlyCreatedChannels = {};
 
-const getOrCreateChannelFor = ( gymName, msg, role ) => {
+const getOrCreateChannelFor = ( gymName, msg ) => {
 	const channelName = getChannelNameFor( gymName );
 
 	const existingChannel = channelName in recentlyCreatedChannels
@@ -57,11 +57,6 @@ const getOrCreateChannelFor = ( gymName, msg, role ) => {
 	} else {
 		const exRaidCategoryId = figureOutWhichWaveToAddThisNewChannelTo( msg );
 
-		const hideChannelFromEveryone = {
-			deny: Discord.Permissions.FLAGS.VIEW_CHANNEL,
-			id: msg.guild.roles.find( 'name', '@everyone' ),
-		};
-
 		const allowBotToSeeChannel = {
 			allow: Discord.Permissions.FLAGS.VIEW_CHANNEL,
 			id: botRole,
@@ -69,19 +64,12 @@ const getOrCreateChannelFor = ( gymName, msg, role ) => {
 
 		const copyPermissionsFromExRaidCategory = msg.guild.channels.get( exRaidCategoryId ).permissionOverwrites.array();
 
-		const attendeePermissions = {
-			allow: new Discord.Permissions( null, exAttendeePermissions ).bitfield,
-			id: role,
-		};
-
 		return msg.guild.createChannel(
 			channelName,
 			'text',
 			[].concat(
-				hideChannelFromEveryone,
 				allowBotToSeeChannel,
-				copyPermissionsFromExRaidCategory,
-				attendeePermissions
+				copyPermissionsFromExRaidCategory
 			)
 		)
 		.then( channel => {

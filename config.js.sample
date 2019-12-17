@@ -16,20 +16,10 @@ module.exports = {
 	trickyGymNames: [
 		'Memorial Bench',
 	],
-	newRoleOptions: {
-		mentionable: true,
-	},
 	newChannelEmbed: {
 		description: 'Hello',
 		color: 10027247,
 	}
-	exChannelPermissions: [
-		'SEND_MESSAGES',
-		'READ_MESSAGES',
-		'VIEW_CHANNEL',
-		'ADD_REACTIONS',
-		'ATTACH_FILES',
-	],
 	scheduledDeletionConfigs: [ {
 		cycle: '02:00:00',
 		guildId: 'GUILD_ID',
