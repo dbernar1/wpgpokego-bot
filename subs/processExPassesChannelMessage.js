@@ -42,7 +42,6 @@ const processExPassesChannelMessage = ( msg, replyToReUpload=true,onlyCheckDimen
 							msg.reply(
 								'looks like you are going to an EX raid at ' + gymName + '! Head on over to ' + channel.toString() + ' to co-ordinate with other trainers.'
 							);
-							channel.send( msg.member.toString() + ' this is the EX raid channel' );
 						} );
 					}
 				} else {
