@@ -15,7 +15,6 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "discord.js": "^12.1.1",
-    "forever": "^2.0.0",
     "fuzzyset.js": "^0.0.91",
     "image-downloader": "^3.4.0",
     "image-size": "^0.8.3",
