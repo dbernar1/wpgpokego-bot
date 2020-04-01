@@ -13,19 +13,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^3.5.1",
-    "discord.js": "^11.3.2",
-    "forever": "^0.15.3",
-    "fuzzyset.js": "^0.0.5",
+    "bluebird": "^3.7.2",
+    "discord.js": "^12.1.1",
+    "forever": "^2.0.0",
+    "fuzzyset.js": "^0.0.91",
     "image-downloader": "^3.4.0",
-    "image-size": "^0.6.3",
+    "image-size": "^0.8.3",
     "minimist": "^1.2.2",
     "moment": "^2.22.2",
     "node-tesseract": "^0.2.7",
     "ontime": "^0.0.6",
-    "underscore": "^1.9.1"
+    "underscore": "1.10.2"
   },
   "devDependencies": {
-    "nodemon": "^1.17.4"
+    "nodemon": "^2.0.2"
   }
 }
