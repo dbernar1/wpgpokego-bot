@@ -19,6 +19,7 @@
     "fuzzyset.js": "^0.0.5",
     "image-downloader": "^3.4.0",
     "image-size": "^0.6.3",
+    "minimist": "^1.2.2",
     "moment": "^2.22.2",
     "node-tesseract": "^0.2.7",
     "ontime": "^0.0.6",
